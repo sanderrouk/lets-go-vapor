@@ -41,9 +41,25 @@ extension UserController: Documentable {
                 authorization: false
         )
 
+        let getAllUsersWithTodos =
+            OpenApi.defineAction(
+                method: .get,
+                route: "/api/v1/users",
+                summary: "Get all Users with Todos",
+                description: "Returns all Users and the corresponding Todos for the Users",
+                responses: [
+                    OpenApi.response(
+                        code: "200",
+                        description: "Successfully returned all Users with Todos",
+                        array:  UserWithTodos.self
+                    )
+                ],
+                authorization: false
+        )
+
         OpenApi.defineController(
             name: "User Controller",
             description: "Authenticate and create users",
-            actions: [login, create])
+            actions: [login, create, getAllUsersWithTodos])
     }
 }

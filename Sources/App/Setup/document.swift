@@ -10,7 +10,8 @@ public func document() {
         CreateTodoRequest.self,
         UserResponse.self,
         CreateUserRequest.self,
-        UserToken.self
+        UserToken.self,
+        UserWithTodos.self
     ]
 
     let controllers: [Documentable.Type] = [

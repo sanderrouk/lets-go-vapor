@@ -5,6 +5,7 @@ import Crypto
 public protocol UserService: Service {
     func login(user: User) throws -> Future<UserToken>
     func create(user: CreateUserRequest) throws -> Future<User>
+    func getAllUsersWithTodos() -> Future<[UserWithTodos]>
 }
 
 public class UserServiceImpl: UserService {
@@ -26,6 +27,10 @@ public class UserServiceImpl: UserService {
         let hash = try BCrypt.hash(userRequest.password)
         let user = User(id: nil, name: userRequest.name, email: userRequest.email, passwordHash: hash)
         return userRepository.createOrUpdate(user: user)
+    }
+
+    public func getAllUsersWithTodos() -> EventLoopFuture<[UserWithTodos]> {
+        return userRepository.getAllUsersWithTodos()
     }
 }
 

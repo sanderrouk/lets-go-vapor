@@ -1,6 +1,6 @@
 import Fluent
 
-func fetchChildren<Parent: Model, Child: Model, Result>(
+public func fetchChildren<Parent: Model, Child: Model, Result>(
     of parents: [Parent],
     idKey: KeyPath<Parent, Parent.ID?> = Parent.idKey,
     via reference: KeyPath<Child, Parent.ID>,

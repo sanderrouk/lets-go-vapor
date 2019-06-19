@@ -20,6 +20,7 @@ public final class UserController: RouteCollection {
 
         authRouter.post("login", use: login)
         groupRouter.post("users", use: create)
+        groupRouter.get("users", use: getAllUsersWithTodos)
     }
 
     public func login(_ request: Request) throws -> Future<UserToken> {
@@ -40,5 +41,9 @@ public final class UserController: RouteCollection {
                 // map to public user response (omits password hash)
                 return try UserResponse(id: user.requireID(), name: user.name, email: user.email)
         }
+    }
+
+    public func getAllUsersWithTodos(_ request: Request) throws -> Future<[UserWithTodos]> {
+        return userService.getAllUsersWithTodos()
     }
 }

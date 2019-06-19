@@ -4,6 +4,7 @@ import Data
 
 public protocol UserRepository: Service {
     func createOrUpdate(user: User) -> Future<User>
+    func getAllUsersWithTodos() -> Future<[UserWithTodos]>
 }
 
 public class UserRepositoryImpl: UserRepository {
@@ -17,6 +18,22 @@ public class UserRepositoryImpl: UserRepository {
         return databaseConnection.withConnection { connection in
             return user.save(on: connection)
         }
+    }
+
+    public func getAllUsersWithTodos() -> EventLoopFuture<[UserWithTodos]> {
+        return databaseConnection.withConnection { connection in
+            return User.query(on: connection)
+                .all()
+                .flatMap {
+                    fetchChildren(of: $0, via: \Todo.userID, on: connection) { user, todos in
+                        return UserRepositoryImpl.make(user: user, with: todos)
+                    }
+            }
+        }
+    }
+
+    private static func make(user: User, with todos: [Todo]) -> UserWithTodos {
+        return UserWithTodos(id: user.id ?? 0, name: user.name, email: user.email, todos: todos)
     }
 }
 
